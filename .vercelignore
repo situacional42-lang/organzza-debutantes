@@ -10,3 +10,7 @@ assets/proposal-*.png
 scripts/generate-presentation.mjs
 docs
 *.log
+service-account*.json
+*-firebase-adminsdk-*.json
+firebase-export*
+.firebase

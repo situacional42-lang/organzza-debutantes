@@ -6,19 +6,19 @@ Repositório: https://github.com/situacional42-lang/organzza-debutantes
 
 ## Hospedagem
 
-**Adaptado para Vercel com PostgreSQL**, incluindo Neon pelo Marketplace. `vercel.json` configura o servidor Node e os arquivos da vitrine. Configure `DATABASE_URL`, `ADMIN_PASSWORD` e `SESSION_SECRET` na Vercel e faça o deploy. Os pedidos ficam no banco; o cookie assinado do painel funciona entre instâncias e após reinícios. Nenhuma senha ou dado de cliente vai para o GitHub.
+**Adaptado para Vercel com Firebase Cloud Firestore**, no projeto informado `siteteste-dcdca`. `vercel.json` configura o servidor Node e os arquivos da vitrine. Configure `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`, `ADMIN_PASSWORD` e `SESSION_SECRET` na Vercel e faça o deploy. Os pedidos ficam no banco; o cookie assinado do painel funciona entre instâncias e após reinícios. A chave privada da conta de serviço fica somente no servidor.
 
-Veja o [guia completo de hospedagem e migração](docs/HOSPEDAGEM.md). Há também configuração para Render e Docker. Fora da Vercel, o modo com arquivo JSON permanece disponível sem `DATABASE_URL`; requer uma instância e disco permanente.
+Veja o [guia completo de hospedagem e migração](docs/HOSPEDAGEM.md). Há também configuração para Render e Docker. Fora da Vercel, o modo com arquivo JSON permanece disponível sem as variáveis Firebase; requer uma instância e disco permanente.
 
 ## Executar localmente
 
-Use Node 24, execute `npm ci` e `npm start`. Vitrine: http://localhost:4173. Painel: http://localhost:4173/admin.html. Sem variáveis, escuta em `127.0.0.1` e guarda provas em `data/appointments.json`. Com `DATABASE_URL`, usa PostgreSQL. `.env.example` é um modelo e não é carregado automaticamente; configure as variáveis no ambiente.
+Use Node 24, execute `npm ci` e `npm start`. Vitrine: http://localhost:4173. Painel: http://localhost:4173/admin.html. Sem variáveis, escuta em `127.0.0.1` e guarda provas em `data/appointments.json`. Com credenciais Firebase, usa Firestore. `.env.example` é um modelo e não é carregado automaticamente; configure as variáveis no ambiente.
 
 ## Agendamentos
 
-O painel reúne pedidos de todas as datas com busca e filtros. A loja aceita, recusa com motivo, remarca, conclui ou cancela a visita. Links do WhatsApp abrem mensagens prontas; o sistema não envia mensagens automaticamente. Pedidos antigos do navegador podem ser importados sem duplicação. `npm run migrate:bookings -- /caminho/appointments.json` importa um arquivo anterior para PostgreSQL.
+O painel reúne pedidos de todas as datas com busca e filtros. A loja aceita, recusa com motivo, remarca, conclui ou cancela a visita. Links do WhatsApp abrem mensagens prontas; o sistema não envia mensagens automaticamente. Pedidos antigos do navegador podem ser importados sem duplicação. `npm run migrate:bookings -- /caminho/appointments.json` importa um arquivo anterior para Firestore.
 
-Pendentes ou confirmados ocupam o horário. Recusar, cancelar ou concluir libera a prova. A API pública mostra só horários ocupados. A gravação no PostgreSQL confere a revisão da agenda e revalida alterações simultâneas para impedir sobreposições e perda de pedidos.
+Pendentes ou confirmados ocupam o horário. Recusar, cancelar ou concluir libera a prova. A API pública mostra só horários ocupados. Transações no Firestore coordenam escritores e revalidam alterações simultâneas para impedir sobreposições e perda de pedidos. Cada pedido fica em um documento da coleção `organzzaAppointments`.
 
 A grade segue a loja: segunda a sexta, 09h–18h; sábado, 08h–16h; domingo fechado. Provas duram uma hora; último início às 17h nos dias úteis e 15h aos sábados. A equipe pode combinar horários personalizados no painel, sujeitos à verificação de conflitos. A configuração está em `business-info.js`.
 
@@ -38,6 +38,6 @@ Endereço informado: Av. Nossa Sra. da Penha, 817 — Santa Lucia, Vitória — 
 
 - `npm run check`: layout em 320/390/768/1440 px, galerias, favoritos, sacola, WhatsApp e painel.
 - `npm run check:bookings`: pedidos entre navegadores, login, aceite, recusa, remarcação e persistência local.
-- `npm run check:vercel`: PostgreSQL via `pg`, duas instâncias, sessões após reinício, conflitos simultâneos, importação e nenhuma gravação local no modo Vercel.
+- `npm run check:vercel`: emulador oficial do Firestore, duas instâncias, sessões após reinício, conflitos simultâneos, importação, regras de acesso e nenhuma gravação local no modo Vercel. Requer Java 21 no PATH.
 
 Os testes usam servidores e dados temporários isolados. O PDF comercial, seu HTML e capturas de tela ficam na pasta local e fora do repositório.

@@ -8,19 +8,20 @@
     "dev": "node server.mjs",
     "check": "node scripts/check-site.mjs",
     "check:bookings": "node scripts/check-bookings.mjs",
-    "check:vercel": "node scripts/check-vercel.mjs",
+    "check:vercel": "firebase emulators:exec --only firestore --project demo-organzza-test \"node scripts/check-vercel.mjs\"",
     "migrate:bookings": "node scripts/migrate-bookings.mjs"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.8",
-    "@electric-sql/pglite-socket": "^0.2.11",
+    "firebase-tools": "^15.30.2",
     "playwright": "^1.63.0"
   },
   "engines": {
     "node": "24.x"
   },
   "dependencies": {
-    "@vercel/functions": "^3.9.8",
-    "pg": "^8.23.0"
+    "firebase-admin": "^14.4.0"
+  },
+  "overrides": {
+    "gaxios": {"uuid": "^11.1.1"}
   }
 }

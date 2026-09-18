@@ -10,3 +10,7 @@ docs
 proposta-comercial.html
 assets/proposal-*.png
 *.log
+service-account*.json
+*-firebase-adminsdk-*.json
+firebase-export*
+.firebase

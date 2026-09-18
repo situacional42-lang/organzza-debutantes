@@ -23,8 +23,8 @@ function normalize(item){
   return {id:text('id'),legacyId:text('legacyId'),clientName:text('clientName',100),phone:text('phone',25),date:text('date',10),time:text('time',5),attendant:text('attendant',100)||'A definir',occasion:text('occasion',100),eventDate:text('eventDate',10),notes:text('notes',1500),dresses:Array.isArray(item.dresses)?item.dresses.slice(0,30).map(d=>({id:String(d.id||'').slice(0,100),name:String(d.name||'Vestido').slice(0,120),size:String(d.size||'A confirmar').slice(0,50)})):[],status:['pending','scheduled','completed','cancelled','rejected'].includes(item.status)?item.status:'pending',source:item.source==='admin'?'admin':'site',createdAt:text('createdAt',40)||new Date().toISOString(),updatedAt:text('updatedAt',40),requestedDate:text('requestedDate',10)||text('date',10),requestedTime:text('requestedTime',5)||text('time',5),refusalReason:text('refusalReason',500),history:Array.isArray(item.history)?item.history.slice(-50):[]};
 }
 export {normalize as normalizeAppointment};
-export function createBookingApi({dataDir,password='',sessionSecret='',databaseUrl='',vercel=false}){
-  const storage=createBookingStorage({dataDir,databaseUrl,requireDatabase:vercel});
+export function createBookingApi({dataDir,password='',sessionSecret='',firebase={},vercel=false}){
+  const storage=createBookingStorage({dataDir,firebase,requireDatabase:vercel});
   const auth=createAdminAuth({password,secret:sessionSecret,required:vercel});
   const load=async()=>(await storage.load()).map(normalize);
   const mutate=fn=>storage.mutate(items=>{for(let i=0;i<items.length;i++)items[i]=normalize(items[i]);return fn(items);});
