@@ -1,0 +1,24 @@
+# Blueprint de hospedagem: serviço Node com disco permanente.
+# Revise o preço do serviço e do disco no Render antes de criar.
+services:
+  - type: web
+    name: organzza-debutantes
+    runtime: node
+    plan: 0.5c-512mb
+    numInstances: 1
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ORGANZZA_DATA_DIR
+        value: /var/data/organzza
+    disk:
+      name: organzza-data
+      mountPath: /var/data
+      sizeGB: 1

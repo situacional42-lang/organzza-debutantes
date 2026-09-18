@@ -1,0 +1,13 @@
+node_modules/
+data/
+.env
+.env.*
+!.env.example
+previews/
+proposta-comercial.html
+Apresentacao-Comercial-Organzza-Debutantes.pdf
+assets/proposal-*.png
+scripts/generate-presentation.mjs
+.DS_Store
+Thumbs.db
+*.log

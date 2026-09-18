@@ -1,0 +1,18 @@
+{
+  "name": "organzza-debutantes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "check": "node scripts/check-site.mjs",
+    "check:bookings": "node scripts/check-bookings.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  },
+  "engines": {
+    "node": ">=22 <27"
+  }
+}
