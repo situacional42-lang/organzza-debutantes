@@ -6,7 +6,7 @@ Repositório: https://github.com/situacional42-lang/organzza-debutantes
 
 ## Hospedagem
 
-**Adaptado para Vercel com Firebase Cloud Firestore**, no projeto informado `siteteste-dcdca`. `vercel.json` configura o servidor Node e os arquivos da vitrine. Configure `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`, `ADMIN_PASSWORD` e `SESSION_SECRET` na Vercel e faça o deploy. Os pedidos ficam no banco; o cookie assinado do painel funciona entre instâncias e após reinícios. A chave privada da conta de serviço fica somente no servidor.
+**Adaptado para Vercel com Firebase Cloud Firestore**, no projeto informado `siteteste-dcdca`. `vercel.json` usa o preset Other: `npm run build` prepara a vitrine estática em `public` e `api/index.mjs` atende os agendamentos. O script do navegador se chama `storefront.js` para não ser confundido com uma entrada de servidor. Configure `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`, `ADMIN_PASSWORD` e `SESSION_SECRET` na Vercel e faça o deploy. Os pedidos ficam no banco; o cookie assinado funciona entre instâncias e após reinícios. A chave privada fica somente no servidor.
 
 Veja o [guia completo de hospedagem e migração](docs/HOSPEDAGEM.md). Há também configuração para Render e Docker. Fora da Vercel, o modo com arquivo JSON permanece disponível sem as variáveis Firebase; requer uma instância e disco permanente.
 
@@ -37,6 +37,7 @@ Endereço informado: Av. Nossa Sra. da Penha, 817 — Santa Lucia, Vitória — 
 ## Verificações e materiais comerciais
 
 - `npm run check`: layout em 320/390/768/1440 px, galerias, favoritos, sacola, WhatsApp e painel.
+- `npm run check:static`: arquivos públicos, referências de scripts e entrada explícita da API na Vercel.
 - `npm run check:bookings`: pedidos entre navegadores, login, aceite, recusa, remarcação e persistência local.
 - `npm run check:vercel`: emulador oficial do Firestore, duas instâncias, sessões após reinício, conflitos simultâneos, importação, regras de acesso e nenhuma gravação local no modo Vercel. Requer Java 21 no PATH.
 

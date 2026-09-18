@@ -18,7 +18,7 @@ Documentação oficial: [Firebase Admin SDK](https://firebase.google.com/docs/ad
 ## Configurar a Vercel
 
 1. Importe [situacional42-lang/organzza-debutantes](https://github.com/situacional42-lang/organzza-debutantes).
-2. Use a raiz como **Root Directory**, framework **Node.js** e Node **24.x**. `vercel.json` configura o servidor e a inclusão da vitrine. Não defina uma pasta de saída estática.
+2. Use a raiz como **Root Directory**, preset **Other** e Node **24.x**. `vercel.json` define o build `npm run build`, a pasta pública `public` e a função `api/index.mjs`. O build copia somente páginas, CSS, JavaScript do navegador e imagens da vitrine. Os arquivos do servidor e credenciais não fazem parte da pasta pública.
 3. Em **Settings → Environment Variables**, configure:
 
 | Variável | Valor |
@@ -39,7 +39,7 @@ node --input-type=module -e "import {randomBytes} from 'node:crypto'; console.lo
 
 Configure as cinco variáveis em **Production**. Para **Preview**, use outro projeto Firebase para separar testes de pedidos reais. Remova `DATABASE_URL` se foi configurada na adaptação anterior; PostgreSQL não é mais utilizado.
 
-4. Faça **Deploy** ou **Redeploy**. As coleções surgem ao salvar o primeiro pedido; não é preciso criar documentos manualmente. A Vercel não precisa de disco permanente, `HOST`, `PORT` ou `ORGANZZA_DATA_DIR`.
+4. Faça **Deploy** ou **Redeploy**. As coleções surgem ao salvar o primeiro pedido; não é preciso criar documentos manualmente. A Vercel não precisa de disco permanente, `HOST`, `PORT` ou `ORGANZZA_DATA_DIR`. A vitrine é estática e os agendamentos usam a função da API; uma indisponibilidade do banco não impede a página inicial de carregar.
 5. Abra `/api/health` e confirme `{"ok":true}`. Entre em `/admin.html` e teste um pedido em outro navegador.
 
 O código está preparado, mas não provisiona o Firestore, configura suas credenciais ou publica um deploy sozinho. Confira planos e limites das plataformas antes da contratação.
@@ -82,3 +82,7 @@ Os preços são demonstrativos e a marca foi recriada da referência enviada. Su
 `npm run check` verifica o site; `npm run check:bookings`, a agenda local. `npm run check:vercel` usa o emulador oficial do Firestore com dados isolados e duas instâncias. É necessário Java 21 no PATH; o teste não usa credenciais reais. Verifica concorrência, persistência após reinício, sessões, importação, decisões da loja e bloqueio de acesso direto às coleções.
 
 Depois do deploy, teste pedidos entre navegadores, aceite, recusa, remarcação e WhatsApp. Faça outro deploy e confira a persistência. Organize backups no Firebase conforme a operação da loja.
+
+## Erro CatalogStore na Vercel
+
+Se um deploy antigo mostrar `ReferenceError: CatalogStore is not defined` em `app.mjs`, a Vercel escolheu o script do navegador como servidor. A versão corrigida usa `storefront.js`, vitrine estática em `public` e entrada `api/index.mjs`. Publique o commit mais recente; se houver configurações manuais no painel, use preset Other, build `npm run build` e saída `public`.

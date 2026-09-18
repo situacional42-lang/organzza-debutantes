@@ -28,7 +28,21 @@ export function createBookingApi({dataDir,password='',sessionSecret='',firebase=
   const auth=createAdminAuth({password,secret:sessionSecret,required:vercel});
   const load=async()=>(await storage.load()).map(normalize);
   const mutate=fn=>storage.mutate(items=>{for(let i=0;i<items.length;i++)items[i]=normalize(items[i]);return fn(items);});
-  async function body(req){const chunks=[];let size=0;for await(const part of req){size+=part.length;if(size>150000)throw fail(413,'Solicitação muito grande.');chunks.push(part);}try{const result=JSON.parse(Buffer.concat(chunks).toString('utf8')||'{}');if(!result||typeof result!=='object'||Array.isArray(result))throw Error();return result;}catch{throw fail(400,'Dados inválidos.');}}
+  async function body(req){
+    let provided;
+    try {provided=req.body;}catch {throw fail(400,'Dados inválidos.');}
+    let raw;
+    if(provided!==undefined) {
+      raw=Buffer.isBuffer(provided)?provided.toString('utf8'):typeof provided==='string'?provided:JSON.stringify(provided);
+      if(Buffer.byteLength(raw)>150000)throw fail(413,'Solicitação muito grande.');
+    } else {
+      const chunks=[];let size=0;
+      for await(const part of req){size+=part.length;if(size>150000)throw fail(413,'Solicitação muito grande.');chunks.push(part);}
+      raw=Buffer.concat(chunks).toString('utf8')||'{}';
+    }
+    try {const result=JSON.parse(raw);if(!result||typeof result!=='object'||Array.isArray(result))throw Error();return result;}
+    catch {throw fail(400,'Dados inválidos.');}
+  }
   function json(res,status,value,headers={}){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...headers});res.end(JSON.stringify(value));}
   function validate(item,items,excludeId,{allowPast=false,allowLegacy=false,allowCustom=false}={}){if(!item.clientName)throw fail(400,'Informe o nome da cliente.');if(!allowLegacy&&!(allowCustom?validCustomTime(item.date,item.time):slotsForDate(item.date).includes(item.time)))throw fail(400,'Escolha uma data e um horário válidos.');if(!allowPast&&item.date<today())throw fail(400,'Escolha uma data futura para a prova.');if(blocking(item)&&items.some(i=>i.id!==excludeId&&appointmentsOverlap(i,item)&&blocking(i)))throw fail(409,'Esse horário já foi solicitado. Escolha outro.');}
   return async function bookingApi(req,res,url){

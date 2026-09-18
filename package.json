@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "node scripts/build-static.mjs",
+    "check:static": "node scripts/check-static.mjs",
     "start": "node server.mjs",
     "dev": "node server.mjs",
     "check": "node scripts/check-site.mjs",

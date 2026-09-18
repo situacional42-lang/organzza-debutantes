@@ -22,7 +22,7 @@ const processes=[];
 assert.ok(process.env.FIRESTORE_EMULATOR_HOST,'Execute npm run check:vercel para iniciar o emulador isolado.');
 const firebaseEnv={FIREBASE_PROJECT_ID:'demo-organzza-test',FIREBASE_CLIENT_EMAIL:'',FIREBASE_PRIVATE_KEY:'',FIRESTORE_EMULATOR_HOST:process.env.FIRESTORE_EMULATOR_HOST,NODE_ENV:'test'};
 function launch(port,extra={}) {
-  const process=spawn(globalThis.process.execPath,['server.mjs'],{env:{...globalThis.process.env,...firebaseEnv,VERCEL:'1',HOST:'127.0.0.1',PORT:String(port),ADMIN_PASSWORD:password,SESSION_SECRET:secret,ORGANZZA_DATA_DIR:path.join(temporary,'unused-files'),...extra},stdio:'pipe',windowsHide:true});
+  const process=spawn(globalThis.process.execPath,['scripts/serve-vercel-test.mjs'],{env:{...globalThis.process.env,...firebaseEnv,VERCEL:'1',VERCEL_PARSED_BODY:port===4193?'1':'',HOST:'127.0.0.1',PORT:String(port),ADMIN_PASSWORD:password,SESSION_SECRET:secret,ORGANZZA_DATA_DIR:path.join(temporary,'unused-files'),...extra},stdio:'pipe',windowsHide:true});
   processes.push(process);return process;
 }
 async function stop(process) {if(process.exitCode!==null||process.signalCode!==null)return;process.kill();await new Promise(resolve=>process.once('exit',resolve));}
