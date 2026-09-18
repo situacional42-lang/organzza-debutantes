@@ -5,7 +5,7 @@ import {spawn} from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 const testDirectory=await mkdtemp(path.join(os.tmpdir(),'organzza-site-test-'));
-const server=spawn(process.execPath,['server.mjs'],{env:{...process.env,PORT:'4187',ORGANZZA_DATA_DIR:testDirectory,ADMIN_PASSWORD:''},stdio:'pipe',windowsHide:true});
+const server=spawn(process.execPath,['server.mjs'],{env:{...process.env,HOST:'127.0.0.1',NODE_ENV:'test',VERCEL:'',DATABASE_URL:'',SESSION_SECRET:'',PORT:'4187',ORGANZZA_DATA_DIR:testDirectory,ADMIN_PASSWORD:''},stdio:'pipe',windowsHide:true});
 for(let i=0;i<100;i++){try{if((await fetch('http://localhost:4187/api/availability')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const context=await browser.newContext({viewport:{width:1440,height:1000}});

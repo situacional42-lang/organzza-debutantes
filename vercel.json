@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "node",
+  "installCommand": "npm ci --omit=dev",
+  "functions": {
+    "server.mjs": {
+      "includeFiles": "{*.html,*.css,*.js,assets/*.webp,assets/*.svg}",
+      "maxDuration": 30
+    }
+  }
+}

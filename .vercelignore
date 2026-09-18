@@ -1,0 +1,12 @@
+.git
+node_modules
+data
+previews
+.env
+.env.*
+*.pdf
+proposta-comercial.html
+assets/proposal-*.png
+scripts/generate-presentation.mjs
+docs
+*.log

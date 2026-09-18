@@ -1,29 +1,43 @@
 # Organzza Debutantes
 
-Site responsivo com catálogo de 7 vestidos, 12 fotos originais agrupadas por modelo, filtros por cor, favoritos e galerias com navegação por teclado. A sacola reúne os modelos escolhidos e abre o WhatsApp real da loja com uma mensagem pronta com os vestidos, referências, cores, tamanhos e dados da cliente. Não envia mensagens automaticamente; a cliente conclui o envio no WhatsApp.
-
-Para visualizar, execute `npm start` nesta pasta e acesse http://localhost:4173. O painel está em http://localhost:4173/admin.html, com a seção Agendamentos. Use o endereço do servidor para registrar provas; abrir o HTML diretamente não registra pedidos compartilhados. `npm run check` e `npm run check:bookings` executam os testes no Chrome com servidores temporários e dados isolados.
-
-O painel reutiliza a estrutura do Achei Meu Vestido para editar fotos, nomes, cores, tamanhos, valores, promoções, visibilidade e disponibilidade. Catálogo, favoritos e sacola continuam no `localStorage` do navegador. Os agendamentos são compartilhados pelo servidor, persistidos em `data/appointments.json`, com escrita em sequência e substituição atômica do arquivo. A lista de Agendamentos reúne pedidos de todas as datas, com filtros por status, busca, aceite, recusa com motivo, remarcação e links de WhatsApp personalizados. Recusar, cancelar ou concluir libera o horário. As decisões e mudanças de data ficam no histórico do registro. Nenhuma mensagem é enviada automaticamente. O painel atualiza os pedidos a cada cinco segundos enquanto estiver visível e ao voltar à janela.
-
-Pedidos antigos deste navegador são importados uma vez ao abrir o painel; a importação é identificada no servidor para evitar duplicação. A API pública divulga somente horários ocupados, sem dados pessoais. Em uso local, o servidor escuta apenas em `127.0.0.1`. Para publicar ou disponibilizar na rede, use hospedagem com Node e armazenamento persistente, defina `ADMIN_PASSWORD`, `HOST` e, se necessário, `PORT`. O painel solicitará a senha e usará uma sessão com cookie HttpOnly. Use HTTPS na publicação. Não é suficiente uma hospedagem exclusivamente estática. Você pode definir `ORGANZZA_DATA_DIR` para um volume persistente fora da pasta do site. Faça backup desse diretório. A grade de provas respeita os horários fornecidos: segunda a sexta, 09h–18h; sábado, 08h–16h; domingo fechado. Provas duram uma hora, com o último início às 17h nos dias úteis e 15h aos sábados. A configuração compartilhada entre site e servidor está em `business-info.js`. Pedidos de prova ficam pendentes até confirmação pela equipe.
-
-As fotos fornecidas estão em `assets`, com cópias WebP para o site. A marca em `assets/logo.svg` é uma recriação vetorial baseada na referência pequena e cortada enviada; `logo-light.svg` é a versão clara sobre a foto. Aurora, Céu, Lavanda, Aqua, Rosé, Rubi e Jardim são nomes editoriais atribuídos para organizar o catálogo, com referências ORG-01 a ORG-07. Não foram informados tamanhos ou condições de contratação; a consulta é direcionada à loja.
-
-O tema usa vinho, creme e dourado. A pedido do usuário, todos os vestidos têm preços e promoções simulados, com R$ 1.000 / R$ 850 como referência: Aurora 1.000 / 850; Céu 1.100 / 930; Lavanda 950 / 800; Aqua 1.400 / 1.190; Rosé 1.200 / 1.020; Rubi 1.300 / 1.100; Jardim 1.150 / 980. São valores demonstrativos, sinalizados no catálogo. A migração `organzza-demo-pricing-v1` aplica esses valores uma única vez ao catálogo já salvo, preservando fotos e demais dados. Após a migração, os valores continuam editáveis no painel. Substitua pelos valores oficiais e remova o aviso de demonstração antes de uso comercial.
-
-Contatos: Instagram @organzzadebutantes · WhatsApp +55 27 99907-3556.
-
-Endereço informado pelo usuário: Av. Nossa Sra. da Penha, 817 — Santa Lucia, Vitória — ES, CEP 29056-245. A seção A loja inclui mapa incorporado do Google Maps, rotas e horários de funcionamento.
-
-No painel, o botão Horário personalizado permite informar a hora combinada com a cliente, inclusive fora da grade de funcionamento. A mesma opção aparece ao marcar ou editar uma visita. O servidor valida a data e a hora e impede sobreposições considerando uma hora por prova. Exceções de horário são exclusivas do painel; o checkout continua seguindo a grade da loja.
-
-## Hospedagem e repositório
+Site responsivo com sete vestidos e doze fotos reais agrupadas por modelo, filtros por cor, favoritos, galerias e sacola. A cliente reúne vestidos, informa seus dados e solicita uma prova. O pedido aparece no painel e o WhatsApp abre com o resumo pronto para ela enviar.
 
 Repositório: https://github.com/situacional42-lang/organzza-debutantes
 
-O projeto inclui `render.yaml` para um serviço Node com disco permanente e um `Dockerfile` para outras hospedagens. Consulte [o guia de hospedagem](docs/HOSPEDAGEM.md). A senha do painel é definida em `ADMIN_PASSWORD` pela hospedagem; dados de clientes e senhas não são enviados ao GitHub.
+## Hospedagem
 
-A API de agendamentos é compartilhada; o catálogo ainda é salvo no navegador e alterações feitas no painel não se propagam para outros dispositivos. Essa limitação está detalhada no guia.
+**Adaptado para Vercel com PostgreSQL**, incluindo Neon pelo Marketplace. `vercel.json` configura o servidor Node e os arquivos da vitrine. Configure `DATABASE_URL`, `ADMIN_PASSWORD` e `SESSION_SECRET` na Vercel e faça o deploy. Os pedidos ficam no banco; o cookie assinado do painel funciona entre instâncias e após reinícios. Nenhuma senha ou dado de cliente vai para o GitHub.
 
-A apresentação comercial em PDF, seu HTML e as capturas de tela são materiais locais e ficam fora do repositório, seguindo a organização dos outros sites.
+Veja o [guia completo de hospedagem e migração](docs/HOSPEDAGEM.md). Há também configuração para Render e Docker. Fora da Vercel, o modo com arquivo JSON permanece disponível sem `DATABASE_URL`; requer uma instância e disco permanente.
+
+## Executar localmente
+
+Use Node 24, execute `npm ci` e `npm start`. Vitrine: http://localhost:4173. Painel: http://localhost:4173/admin.html. Sem variáveis, escuta em `127.0.0.1` e guarda provas em `data/appointments.json`. Com `DATABASE_URL`, usa PostgreSQL. `.env.example` é um modelo e não é carregado automaticamente; configure as variáveis no ambiente.
+
+## Agendamentos
+
+O painel reúne pedidos de todas as datas com busca e filtros. A loja aceita, recusa com motivo, remarca, conclui ou cancela a visita. Links do WhatsApp abrem mensagens prontas; o sistema não envia mensagens automaticamente. Pedidos antigos do navegador podem ser importados sem duplicação. `npm run migrate:bookings -- /caminho/appointments.json` importa um arquivo anterior para PostgreSQL.
+
+Pendentes ou confirmados ocupam o horário. Recusar, cancelar ou concluir libera a prova. A API pública mostra só horários ocupados. A gravação no PostgreSQL confere a revisão da agenda e revalida alterações simultâneas para impedir sobreposições e perda de pedidos.
+
+A grade segue a loja: segunda a sexta, 09h–18h; sábado, 08h–16h; domingo fechado. Provas duram uma hora; último início às 17h nos dias úteis e 15h aos sábados. A equipe pode combinar horários personalizados no painel, sujeitos à verificação de conflitos. A configuração está em `business-info.js`.
+
+## Catálogo e marca
+
+O painel permite editar vestidos, fotos, preços, promoções, tamanhos e disponibilidade. **Essas alterações ainda são salvas no navegador utilizado e não se propagam para outros dispositivos.** A adaptação para Vercel compartilha os agendamentos. Para publicar alterações do acervo na versão atual, atualize os padrões em `catalog-store.js` e publique o código.
+
+Preços e promoções demonstrativos, conforme solicitado: Aurora 1.000/850; Céu 1.100/930; Lavanda 950/800; Aqua 1.400/1.190; Rosé 1.200/1.020; Rubi 1.300/1.100; Jardim 1.150/980. Valores em reais. Nomes e referências foram atribuídos para organizar o acervo. Substitua pelos dados oficiais e remova o aviso de demonstração antes do uso comercial.
+
+Fotos fornecidas em `assets`, com cópias WebP. A logo SVG foi recriada a partir da referência pequena e cortada. O tema usa vinho, creme e dourado.
+
+Instagram: https://www.instagram.com/organzzadebutantes/ · WhatsApp: +55 27 99907-3556.
+
+Endereço informado: Av. Nossa Sra. da Penha, 817 — Santa Lucia, Vitória — ES, CEP 29056-245. O site inclui mapa, rotas e horários de funcionamento.
+
+## Verificações e materiais comerciais
+
+- `npm run check`: layout em 320/390/768/1440 px, galerias, favoritos, sacola, WhatsApp e painel.
+- `npm run check:bookings`: pedidos entre navegadores, login, aceite, recusa, remarcação e persistência local.
+- `npm run check:vercel`: PostgreSQL via `pg`, duas instâncias, sessões após reinício, conflitos simultâneos, importação e nenhuma gravação local no modo Vercel.
+
+Os testes usam servidores e dados temporários isolados. O PDF comercial, seu HTML e capturas de tela ficam na pasta local e fora do repositório.

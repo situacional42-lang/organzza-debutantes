@@ -7,12 +7,20 @@
     "start": "node server.mjs",
     "dev": "node server.mjs",
     "check": "node scripts/check-site.mjs",
-    "check:bookings": "node scripts/check-bookings.mjs"
+    "check:bookings": "node scripts/check-bookings.mjs",
+    "check:vercel": "node scripts/check-vercel.mjs",
+    "migrate:bookings": "node scripts/migrate-bookings.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@electric-sql/pglite-socket": "^0.2.11",
     "playwright": "^1.63.0"
   },
   "engines": {
-    "node": ">=22 <27"
+    "node": "24.x"
+  },
+  "dependencies": {
+    "@vercel/functions": "^3.9.8",
+    "pg": "^8.23.0"
   }
 }
